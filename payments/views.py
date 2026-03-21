@@ -3,12 +3,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .serializers import PaymentSubmissionSerializer, TripSerializer
-from .legacy_processor import LegacyPaymentProcessor
-from .models import Enrolment, Payment, Trip
+from .services import PaymentService
+from .models import Trip
 from django.shortcuts import get_object_or_404
 
 
 class SubmitPaymentView(APIView):
+    payment_service = PaymentService()
+
     def post(self, request):
         serializer = PaymentSubmissionSerializer(data=request.data)
         if serializer.is_valid():
@@ -18,34 +20,12 @@ class SubmitPaymentView(APIView):
             card_number = serializer.validated_data["card_number"]
             expiry_date = serializer.validated_data["expiry_date"]
             cvv = serializer.validated_data["cvv"]
-            activity_id = str(trip.id)  # type: ignore[attr-defined]
             amount = float(trip.cost)
-            print(trip.school)
-            school_id = trip.school_id  # type: ignore[attr-defined]
-            enrolment = Enrolment.objects.create(
-                trip=trip, student_name=student_name, parent_name=parent_name
+
+            processing_result = self.payment_service.enrol_and_pay(
+                trip, student_name, parent_name, card_number, expiry_date, cvv
             )
-            legacy_processor = LegacyPaymentProcessor()
-            processing_result = legacy_processor.process_payment(
-                payment_data={
-                    "student_name": student_name,
-                    "parent_name": parent_name,
-                    "card_number": card_number,
-                    "expiry_date": expiry_date,
-                    "cvv": cvv,
-                    "activity_id": activity_id,
-                    "amount": amount,
-                    "school_id": school_id,
-                }
-            )
-            Payment.objects.create(
-                enrolment=enrolment,
-                amount=amount,
-                card_last_four=card_number[-4:],
-                success=processing_result.success,
-                transaction_id=processing_result.transaction_id,
-                error_message=processing_result.error_message,
-            )
+
             if processing_result.success:
                 return Response(
                     {
