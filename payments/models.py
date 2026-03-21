@@ -23,6 +23,9 @@ class Trip(models.Model):
 
 
 class Enrolment(models.Model):
+    class Meta:
+        unique_together = ("trip", "student_name")
+
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
     student_name = models.CharField(max_length=255)
     parent_name = models.CharField(max_length=255)
