@@ -25,7 +25,8 @@ describe('PaymentForm', () => {
     await user.type(screen.getByLabelText(/student name/i), 'Emma Wilson');
     await user.type(screen.getByLabelText(/parent name/i), 'Sarah Wilson');
     await user.type(screen.getByLabelText(/card number/i), '1234567890123456');
-    await user.type(screen.getByLabelText(/expiry date/i), '12/27');
+    // Type only digits — the auto-slash after 2 digits produces "12/27"
+    await user.type(screen.getByLabelText(/expiry date/i), '1227');
     await user.type(screen.getByLabelText(/cvv/i), '123');
   }
 
@@ -65,7 +66,7 @@ describe('PaymentForm', () => {
     await user.type(screen.getByLabelText(/card number/i), '1234');
     await user.type(screen.getByLabelText(/student name/i), 'Emma Wilson');
     await user.type(screen.getByLabelText(/parent name/i), 'Sarah Wilson');
-    await user.type(screen.getByLabelText(/expiry date/i), '12/27');
+    await user.type(screen.getByLabelText(/expiry date/i), '1227');
     await user.type(screen.getByLabelText(/cvv/i), '123');
     await user.click(screen.getByRole('button', { name: /submit|pay/i }));
 
@@ -98,7 +99,7 @@ describe('PaymentForm', () => {
     await user.type(screen.getByLabelText(/student name/i), 'Emma Wilson');
     await user.type(screen.getByLabelText(/parent name/i), 'Sarah Wilson');
     await user.type(screen.getByLabelText(/card number/i), '1234567890123456');
-    await user.type(screen.getByLabelText(/expiry date/i), '13/25');
+    await user.type(screen.getByLabelText(/expiry date/i), '1325');
     await user.type(screen.getByLabelText(/cvv/i), '123');
     await user.click(screen.getByRole('button', { name: /submit|pay/i }));
 
@@ -114,12 +115,12 @@ describe('PaymentForm', () => {
     await user.type(screen.getByLabelText(/student name/i), 'Emma Wilson');
     await user.type(screen.getByLabelText(/parent name/i), 'Sarah Wilson');
     await user.type(screen.getByLabelText(/card number/i), '1234567890123456');
-    await user.type(screen.getByLabelText(/expiry date/i), '12/27');
+    await user.type(screen.getByLabelText(/expiry date/i), '1227');
     await user.type(screen.getByLabelText(/cvv/i), '12');
     await user.click(screen.getByRole('button', { name: /submit|pay/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/cvv.*3 or 4 digits/i)).toBeInTheDocument();
+      expect(screen.getByText(/cvv.*3 digits/i)).toBeInTheDocument();
     });
   });
 

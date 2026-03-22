@@ -59,7 +59,7 @@ describe('App', () => {
     await user.type(screen.getByLabelText(/student name/i), 'Emma Wilson');
     await user.type(screen.getByLabelText(/parent name/i), 'Sarah Wilson');
     await user.type(screen.getByLabelText(/card number/i), '1234567890123456');
-    await user.type(screen.getByLabelText(/expiry date/i), '12/27');
+    await user.type(screen.getByLabelText(/expiry date/i), '1227');
     await user.type(screen.getByLabelText(/cvv/i), '123');
     await user.click(screen.getByRole('button', { name: /submit|pay/i }));
 
@@ -113,7 +113,7 @@ describe('App', () => {
     await user.type(screen.getByLabelText(/student name/i), 'Emma Wilson');
     await user.type(screen.getByLabelText(/parent name/i), 'Sarah Wilson');
     await user.type(screen.getByLabelText(/card number/i), '1234567890123456');
-    await user.type(screen.getByLabelText(/expiry date/i), '12/27');
+    await user.type(screen.getByLabelText(/expiry date/i), '1227');
     await user.type(screen.getByLabelText(/cvv/i), '123');
     await user.click(screen.getByRole('button', { name: /submit|pay/i }));
 
