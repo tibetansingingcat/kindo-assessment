@@ -48,12 +48,19 @@ export function PaymentForm({ trip, onSuccess, onBack }: PaymentFormProps) {
       errors.expiry_date = ['Expiry date is required'];
     } else if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate)) {
       errors.expiry_date = ['Expiry must be MM/YY format'];
+    } else {
+      const month = parseInt(expiryDate.slice(0, 2), 10);
+      const year = 2000 + parseInt(expiryDate.slice(3), 10);
+      const now = new Date();
+      if (year < now.getFullYear() || (year === now.getFullYear() && month < now.getMonth() + 1)) {
+        errors.expiry_date = ['Card has expired'];
+      }
     }
 
     if (!cvv) {
       errors.cvv = ['CVV is required'];
-    } else if (!/^\d{3,4}$/.test(cvv)) {
-      errors.cvv = ['CVV must be 3 or 4 digits'];
+    } else if (!/^\d{3}$/.test(cvv)) {
+      errors.cvv = ['CVV must be 3 digits'];
     }
 
     return errors;

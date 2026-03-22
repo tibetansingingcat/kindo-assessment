@@ -31,7 +31,7 @@ def valid_payment_data(trip):
         "student_name": "Emma Wilson",
         "parent_name": "Sarah Wilson",
         "card_number": "1234567890123456",
-        "expiry_date": "12/27",
+        "expiry_date": f"12/{date.today().year % 100 + 2:02d}",
         "cvv": "123",
     }
 

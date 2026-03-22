@@ -33,7 +33,26 @@ class TestPaymentSubmissionSerializer:
         assert not serializer.is_valid()
         assert "expiry_date" in serializer.errors
 
-    @pytest.mark.parametrize("bad_cvv", ["12", "ABCD", "12345"])
+    def test_expired_card_rejected(self, valid_payment_data):
+        valid_payment_data["expiry_date"] = "01/20"
+        serializer = PaymentSubmissionSerializer(data=valid_payment_data)
+        assert not serializer.is_valid()
+        assert "expiry_date" in serializer.errors
+        assert "expired" in serializer.errors["expiry_date"][0].lower()
+
+    def test_current_month_expiry_accepted(self, valid_payment_data):
+        from datetime import date
+        today = date.today()
+        valid_payment_data["expiry_date"] = f"{today.month:02d}/{today.strftime('%y')}"
+        serializer = PaymentSubmissionSerializer(data=valid_payment_data)
+        assert serializer.is_valid(), serializer.errors
+
+    def test_future_expiry_accepted(self, valid_payment_data):
+        valid_payment_data["expiry_date"] = "12/35"
+        serializer = PaymentSubmissionSerializer(data=valid_payment_data)
+        assert serializer.is_valid(), serializer.errors
+
+    @pytest.mark.parametrize("bad_cvv", ["12", "1234", "ABCD", "12345"])
     def test_bad_cvv_rejected(self, valid_payment_data, bad_cvv):
         valid_payment_data["cvv"] = bad_cvv
         serializer = PaymentSubmissionSerializer(data=valid_payment_data)
@@ -42,11 +61,6 @@ class TestPaymentSubmissionSerializer:
 
     def test_valid_cvv_3_digits(self, valid_payment_data):
         valid_payment_data["cvv"] = "123"
-        serializer = PaymentSubmissionSerializer(data=valid_payment_data)
-        assert serializer.is_valid(), serializer.errors
-
-    def test_valid_cvv_4_digits(self, valid_payment_data):
-        valid_payment_data["cvv"] = "1234"
         serializer = PaymentSubmissionSerializer(data=valid_payment_data)
         assert serializer.is_valid(), serializer.errors
 
