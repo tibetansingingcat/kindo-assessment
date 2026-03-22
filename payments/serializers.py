@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Trip
+from .models import School, Trip
 import re
 
 
@@ -27,7 +27,15 @@ class PaymentSubmissionSerializer(serializers.Serializer):
         return value
 
 
+class SchoolSerializer(serializers.ModelSerializer):
+    class Meta:  # type: ignore[override]
+        model = School
+        fields = ["id", "name"]
+
+
 class TripSerializer(serializers.ModelSerializer):
+    school = SchoolSerializer(read_only=True)
+
     class Meta:  # type: ignore[override]
         model = Trip
-        fields = ["id", "title", "description", "date", "location", "cost"]
+        fields = ["id", "title", "description", "date", "location", "cost", "school"]
