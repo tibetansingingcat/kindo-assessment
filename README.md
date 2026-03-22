@@ -26,6 +26,56 @@ Trip Selection  →  Registration & Payment Form  →  Confirmation
                          └────── (retry / back) ────────┘
 ```
 
+### Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant Parent as Parent (Browser)
+    participant React as React Frontend
+    participant API as Django API
+    participant Service as PaymentService
+    participant Processor as Legacy Processor
+    participant DB as SQLite
+
+    Note over Parent, DB: Trip Retrieval
+    Parent->>React: Opens app
+    React->>API: GET /api/trips/
+    API->>DB: Query trips + schools
+    DB-->>API: Trip list
+    API-->>React: JSON array of trips
+    React-->>Parent: Display trip cards
+
+    Parent->>React: Clicks "Register & Pay"
+    React-->>Parent: Show payment form
+
+    Note over Parent, DB: Payment Flow
+    Parent->>React: Submits form
+    React->>React: Client-side validation
+    React->>API: POST /api/payments/
+    API->>API: Serializer validation (card, expiry, CVV)
+    API->>DB: Fetch trip
+    API->>Service: enrol_and_pay()
+    Service->>DB: get_or_create Enrolment
+
+    loop Up to 3 attempts (retries only transient failures)
+        Service->>Processor: process_payment()
+        Processor-->>Service: PaymentResponse
+        Service->>DB: Save Payment record
+    end
+
+    Service-->>API: PaymentResponse
+    alt Success
+        API-->>React: 200 + transaction_id
+        React-->>Parent: Confirmation screen
+    else Payment declined
+        API-->>React: 400 + error message
+        React-->>Parent: Error banner, form stays for retry
+    else Validation error
+        API-->>React: 400 + field errors
+        React-->>Parent: Inline field errors
+    end
+```
+
 ## Setup Instructions
 
 ### Prerequisites
