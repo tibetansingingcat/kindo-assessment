@@ -28,6 +28,7 @@ export interface PaymentSuccess {
   amount_charged: number;
   student_name: string;
   trip_name: string;
+  card_last_four: string;
 }
 
 export interface PaymentError {

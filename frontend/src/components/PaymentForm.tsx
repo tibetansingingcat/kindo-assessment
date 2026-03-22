@@ -252,7 +252,14 @@ export function PaymentForm({ trip, onSuccess, onBack }: PaymentFormProps) {
                   type="text"
                   placeholder="MM/YY"
                   value={expiryDate}
-                  onChange={(e) => setExpiryDate(e.target.value)}
+                  onChange={(e) => {
+                    let val = e.target.value;
+                    // Auto-insert slash after 2 digits
+                    if (val.length === 2 && expiryDate.length === 1) {
+                      val += '/';
+                    }
+                    setExpiryDate(val);
+                  }}
                   aria-describedby={fieldErrors.expiry_date ? 'expiry_date-error' : undefined}
                   className={inputClass('expiry_date')}
                 />

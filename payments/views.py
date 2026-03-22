@@ -47,6 +47,7 @@ class SubmitPaymentView(APIView):
                     "amount_charged": amount,
                     "student_name": student_name,
                     "trip_name": trip.title,
+                    "card_last_four": card_number[-4:],
                 },
                 status=status.HTTP_200_OK,
             )

@@ -18,3 +18,18 @@ body {
 #root {
   min-height: 100svh;
 }
+
+@media print {
+  body, #root {
+    min-height: auto !important;
+    background: white;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    display: none;
+  }
+  main {
+    padding: 0 !important;
+  }
+}

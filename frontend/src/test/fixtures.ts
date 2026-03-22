@@ -33,6 +33,7 @@ export const mockPaymentSuccess: PaymentSuccess = {
   amount_charged: 45.0,
   student_name: 'Emma Wilson',
   trip_name: 'Museum Field Trip',
+  card_last_four: '3456',
 };
 
 export const mockPaymentRequest: PaymentRequest = {
