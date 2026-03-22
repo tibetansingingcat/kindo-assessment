@@ -119,7 +119,7 @@ describe('PaymentForm', () => {
     await user.click(screen.getByRole('button', { name: /submit|pay/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/cvv.*3 digits/i)).toBeInTheDocument();
+      expect(screen.getByText(/cvv.*3 or 4 digits/i)).toBeInTheDocument();
     });
   });
 

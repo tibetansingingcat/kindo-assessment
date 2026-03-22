@@ -52,8 +52,8 @@ export function PaymentForm({ trip, onSuccess, onBack }: PaymentFormProps) {
 
     if (!cvv) {
       errors.cvv = ['CVV is required'];
-    } else if (!/^\d{3}$/.test(cvv)) {
-      errors.cvv = ['CVV must be 3 digits'];
+    } else if (!/^\d{3,4}$/.test(cvv)) {
+      errors.cvv = ['CVV must be 3 or 4 digits'];
     }
 
     return errors;
