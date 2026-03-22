@@ -31,10 +31,10 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-svh bg-gradient-to-br from-slate-50 via-cyan-50/30 to-slate-100">
+    <div className="min-h-svh bg-linear-to-br from-slate-50 via-cyan-50/30 to-slate-100">
       <header className="border-b border-slate-200/80 bg-white/70 backdrop-blur-md">
         <div className="mx-auto flex max-w-3xl items-center gap-3 px-6 py-5">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-teal-600 text-lg font-bold text-white shadow-lg shadow-cyan-500/20">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-cyan-500 to-teal-600 text-lg font-bold text-white shadow-lg shadow-cyan-500/20">
             T
           </div>
           <div>
