@@ -43,7 +43,7 @@ describe('API Client', () => {
     });
 
     it('throws ApiError with status 404 when trip not found', async () => {
-      vi.mocked(fetch).mockResolvedValueOnce(
+      vi.mocked(fetch).mockResolvedValue(
         new Response(JSON.stringify({ detail: 'Not found.' }), { status: 404 }),
       );
 
