@@ -34,10 +34,16 @@ export function TripList({ onSelectTrip }: TripListProps) {
 
   if (loading) return <LoadingSpinner message="Loading trips..." />;
   if (error) return <ErrorMessage message={error} onRetry={fetchTrips} />;
-  if (trips.length === 0) return <p className="py-12 text-center text-gray-500">No trips available</p>;
+  if (trips.length === 0) {
+    return (
+      <div className="rounded-2xl border border-slate-200/80 bg-white py-16 text-center">
+        <p className="text-sm text-slate-400">No trips available</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2">
+    <div className="grid gap-5 sm:grid-cols-2">
       {trips.map((trip) => (
         <TripCard key={trip.id} trip={trip} onClick={() => onSelectTrip(trip)} />
       ))}

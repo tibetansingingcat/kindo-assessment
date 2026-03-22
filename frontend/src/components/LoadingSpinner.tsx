@@ -4,9 +4,9 @@ interface LoadingSpinnerProps {
 
 export function LoadingSpinner({ message }: LoadingSpinnerProps) {
   return (
-    <div role="status" className="flex flex-col items-center justify-center py-12">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-[#00acc9]" />
-      {message && <p className="mt-4 text-sm text-gray-500">{message}</p>}
+    <div role="status" className="flex flex-col items-center justify-center py-20">
+      <div className="h-10 w-10 animate-spin rounded-full border-[3px] border-slate-200 border-t-cyan-500" />
+      {message && <p className="mt-4 text-sm text-slate-400">{message}</p>}
     </div>
   );
 }

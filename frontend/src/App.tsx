@@ -31,18 +31,38 @@ export default function App() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
-      <h1 className="mb-8 text-center text-3xl font-bold text-gray-900">School Trip Payments</h1>
+    <div className="min-h-svh bg-gradient-to-br from-slate-50 via-cyan-50/30 to-slate-100">
+      <header className="border-b border-slate-200/80 bg-white/70 backdrop-blur-md">
+        <div className="mx-auto flex max-w-3xl items-center gap-3 px-6 py-5">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-teal-600 text-lg font-bold text-white shadow-lg shadow-cyan-500/20">
+            T
+          </div>
+          <div>
+            <h1 className="text-xl font-bold tracking-tight text-slate-900">TripPay</h1>
+            <p className="text-xs text-slate-500">School trip registration & payments</p>
+          </div>
+        </div>
+      </header>
 
-      {step === 'select_trip' && <TripList onSelectTrip={handleSelectTrip} />}
+      <main className="mx-auto max-w-3xl px-6 py-10">
+        {step === 'select_trip' && (
+          <div>
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold tracking-tight text-slate-900">Upcoming Trips</h2>
+              <p className="mt-1 text-sm text-slate-500">Select a trip to register and pay</p>
+            </div>
+            <TripList onSelectTrip={handleSelectTrip} />
+          </div>
+        )}
 
-      {step === 'payment_form' && selectedTrip && (
-        <PaymentForm trip={selectedTrip} onSuccess={handlePaymentSuccess} onBack={handleBack} />
-      )}
+        {step === 'payment_form' && selectedTrip && (
+          <PaymentForm trip={selectedTrip} onSuccess={handlePaymentSuccess} onBack={handleBack} />
+        )}
 
-      {step === 'confirmation' && paymentResult && selectedTrip && (
-        <Confirmation result={paymentResult} tripDate={selectedTrip.date} onReset={handleReset} />
-      )}
+        {step === 'confirmation' && paymentResult && selectedTrip && (
+          <Confirmation result={paymentResult} tripDate={selectedTrip.date} onReset={handleReset} />
+        )}
+      </main>
     </div>
   );
 }
