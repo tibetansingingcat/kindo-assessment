@@ -17,5 +17,11 @@ django_settings_module = "config.settings"
 [dependency-groups]
 dev = [
     "django-stubs>=6.0.1",
+    "pytest>=8.0",
+    "pytest-django>=4.9",
     "ruff>=0.15.7",
 ]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+pythonpath = ["."]
