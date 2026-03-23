@@ -19,8 +19,8 @@ class PaymentService:
 
         enrolment, created = Enrolment.objects.get_or_create(
             trip=trip,
-            student_name=student_name,
-            defaults={"parent_name": parent_name},
+            student_name__iexact=student_name,
+            defaults={"student_name": student_name, "parent_name": parent_name},
         )
         if created:
             self.logger.info(
@@ -29,6 +29,16 @@ class PaymentService:
                 trip.title,
             )
         else:
+            if enrolment.payments.filter(success=True).exists():
+                self.logger.info(
+                    "Student '%s' already has a successful payment for trip '%s'.",
+                    student_name,
+                    trip.title,
+                )
+                return PaymentResponse(
+                    success=False,
+                    error_message="This student has already paid for this trip.",
+                )
             self.logger.info(
                 "Found existing enrolment for student '%s' in trip '%s'. Proceeding with payment.",
                 student_name,

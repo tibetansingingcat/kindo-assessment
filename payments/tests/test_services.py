@@ -74,3 +74,37 @@ class TestPaymentService:
             result = self._call(trip, mock)
         assert result.success is True
         assert Payment.objects.count() == 2
+
+    def test_already_paid_rejects_second_payment(self, trip, mock_processor_success):
+        self._call(trip, mock_processor_success)
+        result = self._call(trip, mock_processor_success)
+        assert result.success is False
+        assert result.error_message == "This student has already paid for this trip."
+        assert mock_processor_success.process_payment.call_count == 1
+
+    def test_already_paid_case_insensitive(self, trip, mock_processor_success):
+        self._call(trip, mock_processor_success)
+        result = self.service.enrol_and_pay(
+            trip=trip,
+            student_name="emma wilson",
+            parent_name="Sarah Wilson",
+            card_number="1234567890123456",
+            expiry_date="12/27",
+            cvv="123",
+        )
+        assert result.success is False
+        assert result.error_message == "This student has already paid for this trip."
+
+    def test_failed_payment_allows_retry(self, trip):
+        fail = PaymentResponse(
+            success=False,
+            error_message="Invalid card number. Must be 16 digits.",
+        )
+        success = PaymentResponse(success=True, transaction_id="TX-9999")
+        with patch("payments.services.PaymentService.legacy_processor") as mock:
+            mock.process_payment.return_value = fail
+            self._call(trip, mock)
+        with patch("payments.services.PaymentService.legacy_processor") as mock:
+            mock.process_payment.return_value = success
+            result = self._call(trip, mock)
+        assert result.success is True

@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.functions import Lower
 
 
 class School(models.Model):
@@ -24,7 +25,13 @@ class Trip(models.Model):
 
 class Enrolment(models.Model):
     class Meta:
-        unique_together = ("trip", "student_name")
+        constraints = [
+            models.UniqueConstraint(
+                Lower("student_name"),
+                "trip",
+                name="unique_student_trip_ci",
+            )
+        ]
 
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
     student_name = models.CharField(max_length=255)
